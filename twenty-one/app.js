@@ -1,51 +1,73 @@
-function randomCard() {
-  const test = cards[Math.floor(Math.random() * cards.length)]
-  console.log(test)
-  return test
-}
+class Deck {
+  constructor() {
 
-const cards = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+    this.deck = []
+    const suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades']
+    const values = ['Ace', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'Jack', 'Queen', 'King']
 
-let sam = 0
-let dealer = 0
-
-sam = randomCard() + randomCard()
-dealer = randomCard() + randomCard()
-
-if (sam + dealer === 44) {
-  console.log('both bust')
-} else if (sam > 21) {
-  console.log('sam bust')
-} else if (dealer > 21) {
-  console.log('dealer bust')
-} else if (sam === 21 && dealer === 21) {
-  console.log('both blackjack')
-} else if (sam === 21) {
-  console.log('sam has blackjack', sam, dealer)
-} else if (dealer === 21) {
-  console.log('dealer has blackjack', sam, dealer)
-} else {
-  // Sam begins
-  while (sam < 17) {
-    sam += randomCard()
+    for (let i = 0; i < suits.length; i++) {
+      for (let j = 0; j < values.length; j++) {
+        this.deck.push(`${values[j]} of ${suits[i]}`)
+      }
+    }
   }
 
-  if (sam > 21) {
-    console.log('sam has bust', sam, dealer)
+  shuffle() {
+
+    const preShuffle = this.deck
+    const postShuffle = []
+
+    while (preShuffle.length > 0) {
+      const randomIndex = Math.floor(Math.random() * preShuffle.length)
+      postShuffle.push(preShuffle[randomIndex])
+      preShuffle.splice(randomIndex, 1)
+    }
+
+    return postShuffle
+  }
+
+}
+
+function randomCardIndex(currentDeck) {
+  return Math.floor(Math.random() * currentDeck.length)
+}
+
+function cardValue(card) {
+  const royals = ['Ace', 'Jack', 'Queen', 'King']
+  const splitValue = card.split(' ')[0]
+  if (!royals.includes(splitValue)) {
+    return parseInt(splitValue)
   } else {
-    // Dealer begins 
-    while (dealer < sam) {
-      dealer += randomCard()
+    if (splitValue === 'Ace') {
+      return 11
+    } else {
+      return 10
     }
-    if (dealer > 21) {
-      console.log('dealer bust', sam, dealer)
-    } else if (dealer > sam) {
-      console.log('dealer wins', sam, dealer)
-    } else if (sam > dealer) {
-      console.log('sam wins', sam, dealer)
+  }
+}
+
+// deck == shuffled deck, nCards == number of cards to deal out to each player, players as strings
+function dealOut(deck, nCards, ...players) {
+
+  const initialHands = {}
+
+  for (let i = 0; i < players.length; i++) {
+
+    initialHands[players[i]] = []
+
+    for (let j = 0; j < nCards; j++) {
+      const cardIndex = randomCardIndex(deck)
+      initialHands[players[i]].push(deck[cardIndex])
+      deck.splice(cardIndex, 1)
     }
   }
 
+  return initialHands
+
 }
 
+
+const shuffledDeck = new Deck().shuffle()
+
+const startingHand = dealOut(shuffledDeck, 2, 'sam', 'dealer')
 

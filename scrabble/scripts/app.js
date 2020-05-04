@@ -4,6 +4,7 @@ const textByLine = fs
   .toString()
   .toUpperCase()
   .split('\n')
+  .map(word => word.split(''))
 
 function randomiser(array) {
   return array[Math.floor(Math.random() * array.length)]
@@ -163,15 +164,50 @@ while (player.currentLetters.length < 7) {
   }
 }
 
-const orderedPlayerLetters = player.currentLetters.sort().join('')
 
-const possibleWords = textByLine
-  .filter(word => {
-    const orderedWord = word.split('').sort().join('')
-    return orderedPlayerLetters.indexOf(orderedWord) > -1
-  })
-  .filter(elem => !!elem)
+// take words and begin map
+// for each word, check if a letter exists inside currentLet
+// if it does remove that letter from currentLet and word
 
-console.log(player)
-console.log(possibleWords)
+const words = [
+  ['m','a','t','t','e','r'], 
+  ['t','a','m','e'], 
+  ['z', 'c'], 
+  ['m','e','a','t'], 
+  ['t','r','a','m'],
+  ['m','a','t','u','r','e']
+]
+const currentLet = ['m','o','t','t','r','a','e']
+const possWords = []
+
+const wordsNew = [
+  ['m','a','t','t','e','r'], 
+  ['t','a','m','e'], 
+  ['z', 'c'], 
+  ['m','e','a','t'], 
+  ['t','r','a','m'],
+  ['m','a','t','u','r','e']
+]
+const currentLetNew = ['m','o','t','t','r','a','e']
+
+for (let i = 0; i < words.length; i++) {
+  const tempWord = words[i]
+  const tempCurrentLetter = currentLet
+  for (let j = 0; j < tempWord.length; j++) {
+    if (currentLetNew.includes(tempWord[j])) {
+      const currIndex = tempCurrentLetter.indexOf(tempWord[j])
+      const wordIndex = tempWord.indexOf(tempWord[j])
+      tempCurrentLetter.splice(currIndex, 1)
+      tempWord.splice(wordIndex, 1)
+      j--
+    }
+  }
+  if (tempWord.length === 0) {
+    console.log('we got em!')
+    possWords.push(wordsNew[i].join(''))
+  }
+}
+
+console.log(currentLetNew)
+console.log(possWords)
 
