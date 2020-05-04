@@ -1,3 +1,5 @@
+// ! GENERIC CARD DEAL OUT
+
 class Deck {
   constructor() {
 
@@ -88,8 +90,10 @@ function dealOut(deck, nCards, ...players) {
 
 }
 
+module.exports = { Deck, randomCardIndex, cardValue, cardsInHandValue, dealOut }
 
-// ACTUAL GAME OF BLACKJACK - ABOVE CODE APPLICABLE FOR OTHER CARD GAMES
+
+// ! BLACKJACK STARTS HERE
 
 const shuffledDeck = new Deck().shuffle()
 
@@ -112,7 +116,7 @@ if (sam + dealer === 44) {
   console.log('dealer has blackjack', hands)
 } else {
   // Sam begins
-
+  // while Sam's total hand value is less than 17, keep hitting and remove card from deck. Recalculate Sam's hand value
   while (hands.sam[hands.sam.length - 1] < 17) {
     const cardIndex = randomCardIndex(shuffledDeck)
     hands.sam.unshift(shuffledDeck[cardIndex])
@@ -124,8 +128,10 @@ if (sam + dealer === 44) {
     console.log('sam has bust', hands)
   } else {
 
+    // Sam's final hand value that is 21 or under
     sam = hands.sam[hands.sam.length - 1]
 
+    // Similar logic to Sam, only difference is keep hitting dealer until dealer hand is more than Sam's
     while (hands.dealer[hands.dealer.length - 1] < 17) {
       const cardIndex = randomCardIndex(shuffledDeck)
       hands.dealer.unshift(shuffledDeck[cardIndex])
@@ -133,8 +139,10 @@ if (sam + dealer === 44) {
       hands.dealer[hands.dealer.length - 1] = cardsInHandValue(hands.dealer)
     }
 
+    // Dealer's final hand value
     dealer = hands.dealer[hands.dealer.length - 1]
 
+    // Final checks
     if (dealer > 21) {
       console.log('dealer bust', hands)
     } else if (dealer > sam) {
