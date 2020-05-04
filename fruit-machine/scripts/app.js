@@ -8,9 +8,6 @@ function main() {
   const colours = ['black', 'yellow', 'green', 'red']
   const cells = []
 
-  let playerMoney = 100
-  let slotMoney = 1000
-
   // Creating slots
 
   slotContainer.classList.add('slotContainer')
