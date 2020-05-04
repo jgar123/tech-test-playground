@@ -32,6 +32,7 @@ function randomCardIndex(currentDeck) {
   return Math.floor(Math.random() * currentDeck.length)
 }
 
+// single card value
 function cardValue(card) {
   const royals = ['Ace', 'Jack', 'Queen', 'King']
   const splitValue = card.split(' ')[0]
@@ -46,6 +47,23 @@ function cardValue(card) {
   }
 }
 
+function cardsInHandValue(cards) {
+
+  const tempCards = cards
+
+  if (isNaN(cards[cards.length - 1])) {
+    return tempCards.reduce((acc, card) => {
+      return acc + cardValue(card)
+    }, 0)
+  } else {
+    tempCards.pop()
+    return tempCards.reduce((acc, card) => {
+      return acc + cardValue(card)
+    }, 0)
+  }
+
+}
+
 // deck == shuffled deck, nCards == number of cards to deal out to each player, players as strings
 function dealOut(deck, nCards, ...players) {
 
@@ -55,10 +73,14 @@ function dealOut(deck, nCards, ...players) {
 
     initialHands[players[i]] = []
 
-    for (let j = 0; j < nCards; j++) {
-      const cardIndex = randomCardIndex(deck)
-      initialHands[players[i]].push(deck[cardIndex])
-      deck.splice(cardIndex, 1)
+    for (let j = 0; j < nCards + 1; j++) {
+      if (j === nCards) {
+        initialHands[players[i]].push(cardsInHandValue(initialHands[players[i]]))
+      } else {
+        const cardIndex = randomCardIndex(deck)
+        initialHands[players[i]].push(deck[cardIndex])
+        deck.splice(cardIndex, 1)
+      }
     }
   }
 
@@ -67,7 +89,61 @@ function dealOut(deck, nCards, ...players) {
 }
 
 
+// ACTUAL GAME OF BLACKJACK - ABOVE CODE APPLICABLE FOR OTHER CARD GAMES
+
 const shuffledDeck = new Deck().shuffle()
 
-const startingHand = dealOut(shuffledDeck, 2, 'sam', 'dealer')
+const hands = dealOut(shuffledDeck, 2, 'sam', 'dealer')
+
+let sam = hands.sam[hands.sam.length - 1]
+let dealer = hands.dealer[hands.dealer.length - 1]
+
+if (sam + dealer === 44) {
+  console.log('both bust')
+} else if (sam > 21) {
+  console.log('sam bust')
+} else if (dealer > 21) {
+  console.log('dealer bust')
+} else if (sam === 21 && dealer === 21) {
+  console.log('both blackjack')
+} else if (sam === 21) {
+  console.log('sam has blackjack', hands)
+} else if (dealer === 21) {
+  console.log('dealer has blackjack', hands)
+} else {
+  // Sam begins
+
+  while (hands.sam[hands.sam.length - 1] < 17) {
+    const cardIndex = randomCardIndex(shuffledDeck)
+    hands.sam.unshift(shuffledDeck[cardIndex])
+    shuffledDeck.slice(cardIndex, 1)
+    hands.sam[hands.sam.length - 1] = cardsInHandValue(hands.sam)
+  }
+
+  if (hands.sam[hands.sam.length - 1] > 21) {
+    console.log('sam has bust', hands)
+  } else {
+
+    sam = hands.sam[hands.sam.length - 1]
+
+    while (hands.dealer[hands.dealer.length - 1] < 17) {
+      const cardIndex = randomCardIndex(shuffledDeck)
+      hands.dealer.unshift(shuffledDeck[cardIndex])
+      shuffledDeck.slice(cardIndex, 1)
+      hands.dealer[hands.dealer.length - 1] = cardsInHandValue(hands.dealer)
+    }
+
+    dealer = hands.dealer[hands.dealer.length - 1]
+
+    if (dealer > 21) {
+      console.log('dealer bust', hands)
+    } else if (dealer > sam) {
+      console.log('dealer wins', hands)
+    } else if (sam > dealer) {
+      console.log('sam wins', hands)
+    }
+    
+  }
+
+}
 
