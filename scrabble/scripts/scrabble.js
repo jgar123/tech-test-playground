@@ -69,25 +69,6 @@ function initPlayerTiles(tileBag, ...playernames) {
 
 }
 
-// Logic pinch...needs optimising for duplicate values
-function permutation(array) {
-  function p(array, temp) {
-    let i, x
-    if (!array.length) {
-      result.push(temp)
-    }
-    for (i = 0; i < array.length; i++) {
-      x = array.splice(i, 1)[0]
-      p(array, temp.concat(x))
-      array.splice(i, 0, x)
-    }
-  }
-
-  const result = []
-  p(array, [])
-  return result
-}
-
 function viableWords(playerLetters, dictionary) {
 
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -100,8 +81,6 @@ function viableWords(playerLetters, dictionary) {
     upperLimit = 'Z'
   }
 
-  const combinations = [...new Set(permutation(playerLetters).map(array => array.join('')))]
-
   const reducedDictionary = dictionary.filter(wordArray => {
     // Check if the upper bound is Z and that the original playerLetter was in fact, a 'Z'
     if (upperLimit === 'Z' && playerLetters[playerLetters.length - 1] !== 'Y') {
@@ -110,6 +89,31 @@ function viableWords(playerLetters, dictionary) {
       return wordArray[0] >= playerLetters[0] && wordArray[wordArray.length - 1] < upperLimit
     }
   })
+
+  const matches = []
+
+  for (let i = 0; i < reducedDictionary.length; i++) {
+    let count = 0
+    const tempDict = reducedDictionary[i]
+    const tempLetters = playerLetters
+
+    for (let j = 0; j < tempDict.length; j++) {
+
+      if (tempLetters.includes(tempDict[j])) {
+        tempLetters.splice(tempLetters.indexOf(tempDict[j]))
+        tempDict.splice(j, 1)
+        count++
+      }
+
+    }
+    if (count === reducedDictionary[i].length) {
+      matches.push(reducedDictionary[i])
+    }
+  }
+
+  console.log(playerLetters)
+  console.log(matches)
+  return matches
 
 }
 
@@ -127,94 +131,3 @@ const tileBag = newGame.theBag
 const players = initPlayerTiles(tileBag, 'jonny')
 
 viableWords(players.jonny.currentLetters, newGame.dictionary)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// const player = { currentLetters: [], points: 0 }
-
-// while (player.currentLetters.length < 7) {
-//   const randomLetter = randomiser(theBag)
-//   if (randomLetter.tileCount < 1) {
-//     console.log('no more left')
-//   } else {
-//     player.currentLetters.push(randomLetter.letter)
-//     randomLetter.tileCount -= 1
-//   }
-// }
-
-
-// take words and begin map
-// for each word, check if a letter exists inside currentLet
-// if it does remove that letter from currentLet and word
-
-// const words = [
-//   ['m','a','t','t','e','r'], 
-//   ['t','a','m','e'], 
-//   ['z', 'c'], 
-//   ['m','e','a','t'], 
-//   ['t','r','a','m'],
-//   ['m','a','t','u','r','e']
-// ]
-// const currentLet = ['m','o','t','t','r','a','e']
-// const possWords = []
-
-// const wordsNew = [
-//   ['m','a','t','t','e','r'], 
-//   ['t','a','m','e'], 
-//   ['z', 'c'], 
-//   ['m','e','a','t'], 
-//   ['t','r','a','m'],
-//   ['m','a','t','u','r','e']
-// ]
-// const currentLetNew = ['m','o','t','t','r','a','e']
-
-// for (let i = 0; i < words.length; i++) {
-//   const tempWord = words[i]
-//   const tempCurrentLetter = currentLet
-//   for (let j = 0; j < tempWord.length; j++) {
-//     if (currentLetNew.includes(tempWord[j])) {
-//       const currIndex = tempCurrentLetter.indexOf(tempWord[j])
-//       const wordIndex = tempWord.indexOf(tempWord[j])
-//       tempCurrentLetter.splice(currIndex, 1)
-//       tempWord.splice(wordIndex, 1)
-//       j--
-//     }
-//   }
-//   if (tempWord.length === 0) {
-//     console.log('we got em!')
-//     possWords.push(wordsNew[i].join(''))
-//   }
-// }
-
-// console.log(currentLetNew)
-// console.log(possWords)
-
