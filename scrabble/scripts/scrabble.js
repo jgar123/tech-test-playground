@@ -69,6 +69,22 @@ function initPlayerTiles(tileBag, ...playernames) {
 
 }
 
+
+// remove letters in myLetters that don't exist in dictword
+function subArrayMatcher(word, letters) {
+  
+  const trimLetters = letters.filter(letter => {
+    return word.includes(letter)
+  }).sort().join('')
+
+  if (trimLetters === word.sort().join('')) {
+    return true
+  } else {
+    return false
+  }
+
+} 
+
 function viableWords(playerLetters, dictionary) {
 
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -90,31 +106,18 @@ function viableWords(playerLetters, dictionary) {
     }
   })
 
+  const testLetters = ['A','G','S','B','W','E','E']
+  const testDict = [['B','A','G','S'],['S','A','G','E'],['H','E','L','L','O'],['S','A','G','E','S']]
   const matches = []
 
-  for (let i = 0; i < reducedDictionary.length; i++) {
-    let count = 0
-    const tempDict = reducedDictionary[i]
-    const tempLetters = playerLetters
+  // for (let i = 0; i < testDict; i++) {
+  //   if (match() === true) {
+  //     matches.push
+  //   }
+  // }
 
-    for (let j = 0; j < tempDict.length; j++) {
-
-      if (tempLetters.includes(tempDict[j])) {
-        tempLetters.splice(tempLetters.indexOf(tempDict[j]))
-        tempDict.splice(j, 1)
-        count++
-      }
-
-    }
-    if (count === reducedDictionary[i].length) {
-      matches.push(reducedDictionary[i])
-    }
-  }
-
-  console.log(playerLetters)
   console.log(matches)
   return matches
-
 }
 
 const textByLine = fs
