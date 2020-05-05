@@ -69,15 +69,19 @@ function initPlayerTiles(tileBag, ...playernames) {
 
 }
 
-
 // remove letters in myLetters that don't exist in dictword
 function subArrayMatcher(word, letters) {
-  
-  const trimLetters = letters.filter(letter => {
-    return word.includes(letter)
-  }).sort().join('')
 
-  if (trimLetters === word.sort().join('')) {
+  const localWord = word.join('')
+  const splitLocalWord = localWord.split('').sort()
+  const localLetters = letters.join('')
+  const splitLocalLetters = localLetters.split('').sort()
+
+  const trimLetters = splitLocalLetters.filter(letter => {
+    return splitLocalWord.includes(letter)
+  }).join('')
+
+  if (trimLetters === splitLocalWord.join('')) {
     return true
   } else {
     return false
@@ -106,17 +110,10 @@ function viableWords(playerLetters, dictionary) {
     }
   })
 
-  const testLetters = ['A','G','S','B','W','E','E']
-  const testDict = [['B','A','G','S'],['S','A','G','E'],['H','E','L','L','O'],['S','A','G','E','S']]
-  const matches = []
+  const matches = reducedDictionary.filter(word => {
+    return subArrayMatcher(word, playerLetters)
+  })
 
-  // for (let i = 0; i < testDict; i++) {
-  //   if (match() === true) {
-  //     matches.push
-  //   }
-  // }
-
-  console.log(matches)
   return matches
 }
 
@@ -133,4 +130,8 @@ const tileBag = newGame.theBag
 
 const players = initPlayerTiles(tileBag, 'jonny')
 
-viableWords(players.jonny.currentLetters, newGame.dictionary)
+const matches = viableWords(players.jonny.currentLetters, newGame.dictionary)
+
+console.log(players.jonny)
+console.log(matches)
+
