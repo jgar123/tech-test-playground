@@ -1,5 +1,3 @@
-const fs = require('fs')
-
 class Scrabble {
   // Originally had theBag as an array of objects (tileCount) but random selection of tiles would have an uneven distribution and so I decided to hard code the letters to represent distribution.
   constructor(dictionary) {
@@ -208,8 +206,10 @@ function highScoringWords(array) {
 
 }
 
+const fs = require('fs')
+
 const textByLine = fs
-  .readFileSync('../assets/twl06.txt')
+  .readFileSync('./assets/twl06.txt')
   .toString()
   .toUpperCase()
   .split('\n')
@@ -226,3 +226,6 @@ const jonnyMatches = viableWords(players.jonny.currentLetters, newGame.dictionar
 const jlw = longestWords(jonnyMatches)
 
 const jhsw = highScoringWords(jonnyMatches)
+
+
+module.exports = { Scrabble, randomTileIndex, initPlayerTiles, letterCount, subArrayMatcher, viableWords, longestWords, highScoringWords }
