@@ -1,3 +1,2 @@
 /* global test, expect */
 
-test('')

@@ -44,8 +44,12 @@ function randomTileIndex(array) {
   return Math.floor(Math.random() * array.length)
 }
 
-// Here tiles remaining would be those in the bag
+// Here tiles remaining would be those in the bag. Player names go in as string, max 4 players
 function initPlayerTiles(tileBag, ...playernames) {
+
+  if (playernames.length > 4) {
+    return 'TOO MANY PLAYERS, MUST BE 4 OR LOWER'
+  }
 
   const players = {}
 
@@ -83,6 +87,7 @@ function letterCount(array) {
   return result
 }
 
+// Could have used a counter & remove from both arrays approach - set i = 0 to go to start of array if letter match is found
 function subArrayMatcher(word, letters) {
 
   // Move away from pointer
@@ -119,7 +124,7 @@ function subArrayMatcher(word, letters) {
 
   return false
 
-} 
+}
 
 function viableWords(playerLetters, dictionary) {
 
@@ -149,6 +154,60 @@ function viableWords(playerLetters, dictionary) {
   return matches
 }
 
+function longestWords(array) {
+
+  if (array.length < 1) {
+    return
+  }
+  const sortedArray = array.sort((a, b) => b.length - a.length)
+  const maxLength = sortedArray[0].length
+  const result = []
+
+  for (let i = 0; i < array.length; i++) {
+
+    if (array[i].length === maxLength) {
+      result.push(array[i].join(''))
+    } else {
+      return result
+    }
+
+  }
+
+}
+
+function highScoringWords(array) {
+
+  const letterPoints = new Scrabble().letterPoints
+  const highestScoring = { words: [], wordPoints: 0 }
+  const result = []
+
+  array.forEach(word => {
+    let wordPoints = 0
+    word.forEach(letter => {
+      letterPoints.forEach(pair => {
+        if (pair.letters.includes(letter)) {
+          wordPoints += pair.points
+        }
+      })
+    })
+    result.push({ word: word, totalPoints: wordPoints })
+  })
+
+  result.sort((a, b) => b.totalPoints - a.totalPoints)
+
+  const maxPoints = result[0].totalPoints
+  highestScoring.wordPoints = maxPoints
+
+  result.forEach(pair => {
+    if (pair.totalPoints === maxPoints) {
+      highestScoring.words.push(pair.word.join(''))
+    }
+  })
+
+  return highestScoring
+
+}
+
 const textByLine = fs
   .readFileSync('../assets/twl06.txt')
   .toString()
@@ -162,8 +221,8 @@ const tileBag = newGame.theBag
 
 const players = initPlayerTiles(tileBag, 'jonny')
 
-const matches = viableWords(players.jonny.currentLetters, newGame.dictionary)
+const jonnyMatches = viableWords(players.jonny.currentLetters, newGame.dictionary)
 
-console.log(players.jonny)
-console.log(matches)
+const jlw = longestWords(jonnyMatches)
 
+const jhsw = highScoringWords(jonnyMatches)
