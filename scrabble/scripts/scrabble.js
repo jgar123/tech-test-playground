@@ -70,8 +70,22 @@ function initPlayerTiles(tileBag, ...playernames) {
 }
 
 // remove letters in myLetters that don't exist in dictword
+function letterCount(array) {
+  const result = array.reduce((obj, char) => {
+    if (obj[char]) {
+      obj[char] = obj[char] + 1
+      return obj
+    } else {
+      obj[char] = 1
+      return obj
+    }
+  }, {})
+  return result
+}
+
 function subArrayMatcher(word, letters) {
 
+  // Move away from pointer
   const localWord = word.join('')
   const splitLocalWord = localWord.split('').sort()
   const localLetters = letters.join('')
@@ -79,13 +93,31 @@ function subArrayMatcher(word, letters) {
 
   const trimLetters = splitLocalLetters.filter(letter => {
     return splitLocalWord.includes(letter)
-  }).join('')
+  })
 
-  if (trimLetters === splitLocalWord.join('')) {
-    return true
-  } else {
-    return false
+  if (new Set(trimLetters).size === new Set(splitLocalWord).size) {
+
+    // ! might want to have test as a count instead
+
+    const reducedLetters = letterCount(trimLetters)
+    const reducedWord = letterCount(splitLocalWord)
+    let test = false
+
+    for (const letter in reducedLetters) {
+
+      if (reducedLetters[letter] >= reducedWord[letter]) {
+        test = true
+      } else {
+        return false
+      }
+
+    }
+
+    return test
+
   }
+
+  return false
 
 } 
 
