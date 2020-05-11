@@ -1,3 +1,5 @@
+/* global test, expect */
+
 const cards = require('./blackjack')
 
 const deckClass = new cards.Deck()
