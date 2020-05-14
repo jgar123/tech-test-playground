@@ -6,7 +6,7 @@
   "author": "Jonny Garius <gariusjonathan@hotmail.co.uk>",
   "license": "MIT",
   "scripts": {
-    "test": "jest"
+    "test": "jest --coverage"
   },
   "dependencies": {
     "jest": "^26.0.0"

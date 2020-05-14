@@ -94,6 +94,7 @@ module.exports = { Deck, randomCardIndex, cardValue, cardsInHandValue, dealOut }
 
 
 // ! BLACKJACK STARTS HERE
+/*
 
 const shuffledDeck = new Deck().shuffle()
 
@@ -155,3 +156,4 @@ if (sam + dealer === 44) {
 
 }
 
+*/
