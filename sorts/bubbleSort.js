@@ -10,16 +10,14 @@ function bubbleSort(unsortedArray) {
     return unsortedArray
   }
 
-  let i = 0
-
-  while (i < unsortedArray.length) {
-    if (unsortedArray[i] > unsortedArray[i + 1]) {
-      swap(unsortedArray, i, i + 1)
-      i = 0
-    } else {
-      i++
+  for (let i = 0; i < unsortedArray.length; i++) {
+    for (let j = 0; j < unsortedArray.length - i - 1; j++) {
+      if (unsortedArray[j] > unsortedArray[j + 1]) {
+        swap(unsortedArray, j, j + 1)
+      }
     }
   }
+  
   return unsortedArray
 }
 
